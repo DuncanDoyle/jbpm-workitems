@@ -9,7 +9,10 @@
 		<module>cxf-webservice-workitem</module>
 	</modules>
 	<properties>
+		<!-- 
 		<version.org.kie>6.0.3-redhat-6</version.org.kie>
+		 -->
+		 <version.org.kie>6.2.0.Final</version.org.kie>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
