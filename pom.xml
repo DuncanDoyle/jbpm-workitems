@@ -9,10 +9,8 @@
 		<module>cxf-webservice-workitem</module>
 	</modules>
 	<properties>
-		<!-- 
-		<version.org.kie>6.0.3-redhat-6</version.org.kie>
-		 -->
-		 <version.org.kie>6.2.0.Final</version.org.kie>
+		<version.org.kie>6.2.0.Final</version.org.kie>
+		<version.org.springframework>3.0.7.RELEASE</version.org.springframework>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -30,10 +28,10 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.cxf</groupId>
-	  			<artifactId>cxf-rt-frontend-jaxws</artifactId>
-  				<version>2.6.8.redhat-7</version>
+				<artifactId>cxf-rt-frontend-jaxws</artifactId>
+				<version>2.6.8</version>
 				<scope>provided</scope>
- 	 		</dependency>
+			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
@@ -44,6 +42,18 @@
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.11</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-beans</artifactId>
+				<version>${version.org.springframework}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${version.org.springframework}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
