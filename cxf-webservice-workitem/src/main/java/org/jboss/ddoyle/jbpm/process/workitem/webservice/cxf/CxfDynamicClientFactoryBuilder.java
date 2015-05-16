@@ -27,6 +27,7 @@ public class CxfDynamicClientFactoryBuilder {
 	
 	private String cxfConfigurationFile;
 	
+	
 	public CxfDynamicClientFactoryBuilder setClassLoader(ClassLoader cl) {
 		this.cl = cl;
 		return this;
@@ -45,9 +46,10 @@ public class CxfDynamicClientFactoryBuilder {
 	public DynamicClientFactory build() {
 		DynamicClientFactory dynamicClientFactory = null;
 		URL cxfConfigurationUrl = cl.getResource(cxfConfigurationFile);
+		
 		if (cxfConfigurationUrl != null) {
 			LOGGER.debug("Initializing CXF SpringBusFactory with '" + cxfConfigurationFile + "' configuration file.");
-			Bus bus = new SpringBusFactory().createBus(cxfConfigurationUrl.getPath());
+			Bus bus = new SpringBusFactory().createBus(cxfConfigurationUrl);
 			dynamicClientFactory = JaxWsDynamicClientFactory.newInstance((Bus) bus);
 		} else {
 			LOGGER.debug("No '" + cxfConfigurationFile + "' CXF configuration file found on the classpath. Falling back to default CXF JaxWsDynamicClient.");
@@ -55,6 +57,5 @@ public class CxfDynamicClientFactoryBuilder {
 		}
 		return dynamicClientFactory;
 	}
-	
 	
 }

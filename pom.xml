@@ -58,22 +58,19 @@
 					<target>1.7</target>
 				</configuration>
 			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
 		</plugins>
 	</build>
 
 	<distributionManagement>
 		<repository>
-			<id>deployment</id>
+			<id>nexus-docker</id>
 			<name>Internal Releases</name>
-			<url>http://127.0.0.1:8081/nexus/content/repositories/releases/</url>
+			<url>http://docker:48081/nexus/content/repositories/distribution-release-maven-repository/</url>
 		</repository>
 		<snapshotRepository>
-			<id>deployment</id>
+			<id>nexus-docker</id>
 			<name>Internal Releases</name>
-			<url>http://127.0.0.1:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://docker:48081/nexus/content/repositories/distribution-snapshot-maven-repository/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
