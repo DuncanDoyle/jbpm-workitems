@@ -8,6 +8,7 @@ import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.endpoint.dynamic.DynamicClientFactory;
 import org.junit.Test;
+import org.kie.internal.executor.api.CommandContext;
 import org.springframework.context.support.AbstractApplicationContext;
 
 /**
@@ -21,8 +22,11 @@ public class CxfWebServiceCommandTest {
 
 	@Test
 	public void testGetDynamicClientFactory() throws Exception {
-		CxfWebServiceWorkItemHandler wih = new CxfWebServiceWorkItemHandler(null, this.getClass().getClassLoader());
-		DynamicClientFactory dcf = wih.getDynamicClientFactory();
+		CxfWebServiceCommand command = new CxfWebServiceCommand();
+		CommandContext ctx = new CommandContext();
+		ctx.setData("ClassLoader", this.getClass().getClassLoader());
+		
+		DynamicClientFactory dcf = command.getDynamicClientFactory(ctx);
 		
 		Field busField = DynamicClientFactory.class.getDeclaredField("bus");
 		busField.setAccessible(true);
