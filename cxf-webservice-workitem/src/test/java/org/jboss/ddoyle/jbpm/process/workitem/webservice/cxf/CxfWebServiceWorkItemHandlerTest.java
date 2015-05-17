@@ -43,10 +43,6 @@ public class CxfWebServiceWorkItemHandlerTest {
 			}
 		}
 		assertTrue(contains);
-		
-		
-		
-		
 	}
 
 }
