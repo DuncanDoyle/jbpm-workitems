@@ -1,4 +1,4 @@
-package org.jboss.ddoyle.jbpm.process.workitem.webservice.cxf;
+package org.jbpm.process.workitem.webservice.cxf;
 
 import java.net.URL;
 

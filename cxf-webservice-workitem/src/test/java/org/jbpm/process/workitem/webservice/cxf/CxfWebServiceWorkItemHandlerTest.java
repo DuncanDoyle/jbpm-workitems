@@ -1,4 +1,4 @@
-package org.jboss.ddoyle.jbpm.process.workitem.webservice.cxf;
+package org.jbpm.process.workitem.webservice.cxf;
 
 import static org.junit.Assert.*;
 
@@ -8,25 +8,21 @@ import org.apache.cxf.Bus;
 import org.apache.cxf.bus.spring.SpringBus;
 import org.apache.cxf.endpoint.dynamic.DynamicClientFactory;
 import org.junit.Test;
-import org.kie.internal.executor.api.CommandContext;
 import org.springframework.context.support.AbstractApplicationContext;
 
 /**
- * Test class for the {@link CxfWebServiceCommand}.
+ * Test class for the {@link CxfWebServiceWorkItemHandler}.
  *   
  * @author <a href="mailto:duncan.doyle@redhat.com">Duncan Doyle</a>
  */
-public class CxfWebServiceCommandTest {
-	
-	private static final String HTTP_CONDUIT_BEAN_NAME = "{http://www.jboss.org/ddoyle/simple-web-service/0.0.1}MySimpleWebServiceBeanPort.http-conduit";
+public class CxfWebServiceWorkItemHandlerTest {
 
+	private static final String HTTP_CONDUIT_BEAN_NAME = "{http://www.jboss.org/ddoyle/simple-web-service/0.0.1}MySimpleWebServiceBeanPort.http-conduit";
+	
 	@Test
 	public void testGetDynamicClientFactory() throws Exception {
-		CxfWebServiceCommand command = new CxfWebServiceCommand();
-		CommandContext ctx = new CommandContext();
-		ctx.setData("ClassLoader", this.getClass().getClassLoader());
-		
-		DynamicClientFactory dcf = command.getDynamicClientFactory(ctx);
+		CxfWebServiceWorkItemHandler wih = new CxfWebServiceWorkItemHandler(null, this.getClass().getClassLoader());
+		DynamicClientFactory dcf = wih.getDynamicClientFactory();
 		
 		Field busField = DynamicClientFactory.class.getDeclaredField("bus");
 		busField.setAccessible(true);

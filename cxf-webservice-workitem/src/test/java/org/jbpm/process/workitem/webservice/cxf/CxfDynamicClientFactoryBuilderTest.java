@@ -1,4 +1,4 @@
-package org.jboss.ddoyle.jbpm.process.workitem.webservice.cxf;
+package org.jbpm.process.workitem.webservice.cxf;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
