@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.jboss.ddoyle.jbpm</groupId>
+	<artifactId>infinispan-workitemhandler</artifactId>
+	<version>1.0.0</version>
+	<properties>
+		<version.org.kie>6.3.0.Final-redhat-5</version.org.kie>
+		<version.org.infinispan>6.4.0.Final-redhat-4</version.org.infinispan>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-api</artifactId>
+			<version>${version.org.kie}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-core</artifactId>
+			<version>${version.org.infinispan}</version>
+			<scope>compile</scope>
+			<exclusions>
+				<!-- 
+				<exclusion>
+					<groupId>org.jboss.marshalling</groupId>
+          			<artifactId>jboss-marshalling</artifactId>
+				</exclusion>
+				<exclusion>
+          			<groupId>org.jboss.marshalling</groupId>
+          			<artifactId>jboss-marshalling-river</artifactId>
+        		</exclusion>
+        		 -->
+			</exclusions>
+		</dependency>
+		
+		<!-- Import the Infinispan client hotrod -->
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-client-hotrod</artifactId>
+			<version>${version.org.infinispan}</version>
+			<scope>compile</scope>
+			<exclusions>
+				<!-- 
+				<exclusion>
+          			<groupId>org.jboss.marshalling</groupId>
+          			<artifactId>jboss-marshalling-river</artifactId>
+        		</exclusion>
+        		 -->
+			</exclusions>
+		</dependency>
+	</dependencies>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
