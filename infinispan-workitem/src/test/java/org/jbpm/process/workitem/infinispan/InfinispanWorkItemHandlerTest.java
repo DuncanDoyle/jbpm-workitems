@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.drools.core.process.instance.WorkItem;
 import org.drools.core.process.instance.impl.DefaultWorkItemManager;
 import org.drools.core.process.instance.impl.WorkItemImpl;
+import org.infinispan.Cache;
 import org.infinispan.commons.api.BasicCacheContainer;
 import org.infinispan.manager.EmbeddedCacheManager;
 import org.jbpm.bpmn2.handler.WorkItemHandlerRuntimeException;
@@ -161,9 +162,7 @@ public class InfinispanWorkItemHandlerTest {
 		 */
 		Map<String, BasicCacheContainer> cacheContainers = new ConcurrentHashMap<String, BasicCacheContainer>();
 		cacheContainers.put(testEndpoint, cacheManager);
-		Field cacheContainersField = ispnWih.getClass().getDeclaredField("cacheContainers");
-		cacheContainersField.setAccessible(true);
-		cacheContainersField.set(ispnWih, cacheContainers);
+		setCacheContainers(ispnWih, cacheContainers);
 
 		ispnWih.executeWorkItem(workItem, wiManager);
 
@@ -181,17 +180,58 @@ public class InfinispanWorkItemHandlerTest {
 	 * instances. Furthermore, a single WIH can be used at multiple points in a process, where different nodes can use different ISPN
 	 * endpoints. So the WIH needs to be able to deal with different ISPN endpoints.
 	 */
-	// @Test
-	public void testMultipleIspnEndpoints() {
-		WorkItem workItem1 = new WorkItemImpl();
+	@Test
+	public void testMultipleIspnEndpoints() throws Exception {
+		
+		
+		WorkItemManager wiManager = Mockito.mock(DefaultWorkItemManager.class);
 
 		// Set parameters
+		WorkItem workItem1 = new WorkItemImpl();
 		Map<String, Object> testParams1 = new HashMap<String, Object>();
 		testParams1.put("endpoint", "localhost:11222");
 		testParams1.put("operation", "GET");
 		testParams1.put("key", "testKey1");
 		testParams1.put("value", "testValue1");
+		workItem1.setParameters(testParams1);
 
+		WorkItem workItem2 = new WorkItemImpl();
+		Map<String, Object> testParams2 = new HashMap<String, Object>();
+		testParams2.put("endpoint", "remote:11222");
+		testParams2.put("operation", "GET");
+		testParams2.put("key", "testKey2");
+		testParams2.put("value", "testValue2");
+		workItem2.setParameters(testParams2);
+
+		/*
+		 * Configure 2 ISPN caches. We therefore need to load another cacheManager.
+		 * We're going to use a Mock for this one as we can't register 2 ISPN nodes in one JVM (we get problems with JMX).
+		 */
+		EmbeddedCacheManager secondCacheManager = Mockito.mock(EmbeddedCacheManager.class);
+		Cache secondCache = Mockito.mock(Cache.class);
+		when(secondCacheManager.getCache()).thenReturn(secondCache);
+		
+		try {
+			Map<String, BasicCacheContainer> cacheContainers = new ConcurrentHashMap<String, BasicCacheContainer>();
+			cacheContainers.put("localhost:11222", cacheManager);
+			cacheContainers.put("remote:11222", secondCacheManager);
+			setCacheContainers(ispnWih, cacheContainers);
+			
+			ispnWih.executeWorkItem(workItem1, wiManager);
+			ispnWih.executeWorkItem(workItem2, wiManager);
+			
+			//Verify the result in the cachemanagers
+			assertEquals("testValue1", cacheManager.getCache().get("testKey1"));
+			verify(secondCache).get("testKey2");
+		} finally {
+			InfinispanTestUtil.disposeCacheManager(secondCacheManager);
+		}
+	}
+
+	private void setCacheContainers(InfinispanWorkItemHandler ispnWih, Map<String, BasicCacheContainer> cacheContainers) throws Exception {
+		Field cacheContainersField = ispnWih.getClass().getDeclaredField("cacheContainers");
+		cacheContainersField.setAccessible(true);
+		cacheContainersField.set(ispnWih, cacheContainers);
 	}
 
 	/**
