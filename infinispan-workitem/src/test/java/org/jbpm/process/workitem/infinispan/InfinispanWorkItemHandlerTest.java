@@ -5,6 +5,7 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,19 +52,80 @@ public class InfinispanWorkItemHandlerTest {
 		InfinispanTestUtil.disposeCacheManager(cacheManager);
 	}
 
-	// @Test
-	public void testInfinispanPut() {
+	@Test
+	public void testInfinispanPut() throws Exception {
+		String testEndpoint = "testEndpointIspnPut";
 
-		// TODO: implement test
-		assertTrue(false);
+		WorkItem workItem = new WorkItemImpl();
 
+		// Set parameters
+		Map<String, Object> testParams = new HashMap<String, Object>();
+		testParams.put("endpoint", testEndpoint);
+		testParams.put("operation", "PUT");
+		testParams.put("key", "testKeyPut");
+		testParams.put("value", "testValueGet");
+
+		workItem.setParameters(testParams);
+		((WorkItemImpl) workItem).setId(1);
+
+		WorkItemManager wiManager = Mockito.mock(DefaultWorkItemManager.class);
+
+		/*
+		 * We need to inject a BasicCacheContainer for our testendpoint inside the WIH to prevent the unit-test to try to access an actual
+		 * ISPN instance over HotRod.
+		 */
+		Map<String, BasicCacheContainer> cacheContainers = new ConcurrentHashMap<String, BasicCacheContainer>();
+		cacheContainers.put(testEndpoint, cacheManager);
+		Field cacheContainersField = ispnWih.getClass().getDeclaredField("cacheContainers");
+		cacheContainersField.setAccessible(true);
+		cacheContainersField.set(ispnWih, cacheContainers);
+
+		ispnWih.executeWorkItem(workItem, wiManager);
+
+		// Verify that the workitem has been completed.
+		verify(wiManager).completeWorkItem(anyInt(), anyMap());
+
+		// Verify that the test values have been stored in ISPN.
+		assertEquals("testValue1", cacheManager.getCache().get("testKey1"));
 	}
 
-	// @Test
-	public void testInfinispanGet() {
+	@Test
+	public void testInfinispanGet() throws Exception {
+		String testEndpoint = "testEndpointIspnGet";
 
-		// TODO: implement test
-		assertTrue(false);
+		WorkItem workItem = new WorkItemImpl();
+
+		// Set parameters
+		Map<String, Object> testParams = new HashMap<String, Object>();
+		testParams.put("endpoint", testEndpoint);
+		testParams.put("operation", "GET");
+		testParams.put("key", "testKeyGet");
+		
+		workItem.setParameters(testParams);
+		((WorkItemImpl) workItem).setId(1);
+
+		WorkItemManager wiManager = Mockito.mock(DefaultWorkItemManager.class);
+
+		/*
+		 * We need to inject a BasicCacheContainer for our testendpoint inside the WIH to prevent the unit-test to try to access an actual
+		 * ISPN instance over HotRod.
+		 */
+		Map<String, BasicCacheContainer> cacheContainers = new ConcurrentHashMap<String, BasicCacheContainer>();
+		cacheContainers.put(testEndpoint, cacheManager);
+		Field cacheContainersField = ispnWih.getClass().getDeclaredField("cacheContainers");
+		cacheContainersField.setAccessible(true);
+		cacheContainersField.set(ispnWih, cacheContainers);
+
+		cacheManager.getCache().put("testKeyGet", "testValueGet");
+		
+		ispnWih.executeWorkItem(workItem, wiManager);
+
+		
+		// TODO: We need to verify that the Map that's passed to the Mock contains the Result value.
+		verify(wiManager).completeWorkItem(anyInt(), anyMap());
+
+		// Verify that the test values have been stored in ISPN.
+		assertEquals("testValue1", cacheManager.getCache().get("testKey1"));
 	}
 
 	/**
@@ -172,6 +234,27 @@ public class InfinispanWorkItemHandlerTest {
 		// Verify that the test values have been stored in ISPN.
 		assertEquals("testValue1", cacheManager.getCache().get("testKey1"));
 	}
+	
+	/**
+	 * Tests the retrieval of CacheContainers for endpoints.
+	 * <p>
+	 * TODO: test thread-safety of creating the CacheContainers for the same endpoint.
+	 */
+	@Test
+	public void testGetCacheContainer() throws Exception {
+		
+		Map<String, BasicCacheContainer> cacheContainers = new ConcurrentHashMap<String, BasicCacheContainer>();
+		cacheContainers.put("localhost:11222", cacheManager);
+		setCacheContainers(ispnWih, cacheContainers);
+		
+		//private synchronized BasicCacheContainer getCacheContainer(final String endpoint) {
+		Method getCacheContainerMethod = ispnWih.getClass().getDeclaredMethod("getCacheContainer", String.class);
+		getCacheContainerMethod.setAccessible(true);
+		BasicCacheContainer returnedCacheContainer = (BasicCacheContainer) getCacheContainerMethod.invoke(ispnWih, "localhost:11222");
+		assertEquals(cacheManager, returnedCacheContainer);
+		
+		
+	}
 
 	/**
 	 * Tests usage of different ISPN endpoints in one WorkItemHandler instance.
@@ -228,19 +311,12 @@ public class InfinispanWorkItemHandlerTest {
 		}
 	}
 
+	
+	
 	private void setCacheContainers(InfinispanWorkItemHandler ispnWih, Map<String, BasicCacheContainer> cacheContainers) throws Exception {
 		Field cacheContainersField = ispnWih.getClass().getDeclaredField("cacheContainers");
 		cacheContainersField.setAccessible(true);
 		cacheContainersField.set(ispnWih, cacheContainers);
-	}
-
-	/**
-	 * Tests the retrieval of CacheContainers for endpoints.
-	 * <p>
-	 * TODO: test thread-safety of creating the CacheContainers for the same endpoint.
-	 */
-	public void testGetCacheContainer() {
-
 	}
 
 }
