@@ -4,7 +4,7 @@
 	<parent>
 	 	<groupId>org.jboss.ddoyle.jbpm</groupId>
         <artifactId>jbpm-workitems-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 		<relativePath>../</relativePath>
 	</parent>
 	<artifactId>cxf-webservice-workitem</artifactId>

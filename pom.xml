@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jboss.ddoyle.jbpm</groupId>
 	<artifactId>jbpm-workitems-parent</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>cxf-webservice-workitem</module>
