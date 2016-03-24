@@ -11,12 +11,15 @@
 	</modules>
 	<properties>
 		<version.org.kie>6.3.0.Final</version.org.kie>
+		<version.org.apache.cxf>2.6.8</version.org.apache.cxf>
 		<version.org.springframework>3.0.7.RELEASE</version.org.springframework>
 		<!-- JBoss DataGrid version 6.6.0. -->
 		<version.org.infinispan>6.4.0.Final-redhat-4</version.org.infinispan>
+		<version.ch.qos.logback>1.1.3</version.ch.qos.logback>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
+			<!-- KIE, Drools and jBPM dependencies. -->
 			<dependency>
 				<groupId>org.kie</groupId>
 				<artifactId>kie-api</artifactId>
@@ -29,30 +32,30 @@
 				<version>${version.org.kie}</version>
 				<scope>provided</scope>
 			</dependency>
+			
+			<!-- CXF dependencies. -->
 			<dependency>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-rt-frontend-jaxws</artifactId>
-				<version>2.6.8</version>
+				<version>${version.org.apache.cxf}</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<!-- Infinispan dependencies. -->
+			<dependency>
+				<groupId>org.infinispan</groupId>
+				<artifactId>infinispan-core</artifactId>
+				<version>${version.org.infinispan}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.7.7</version>
+				<groupId>org.infinispan</groupId>
+				<artifactId>infinispan-client-hotrod</artifactId>
+				<version>${version.org.infinispan}</version>
 				<scope>provided</scope>
 			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.11</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.mockito</groupId>
-				<artifactId>mockito-core</artifactId>
-				<version>1.10.19</version>
-				<scope>test</scope>
-			</dependency>
+			
+			<!-- Spring dependencies. -->
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-beans</artifactId>
@@ -65,6 +68,49 @@
 				<version>${version.org.springframework}</version>
 				<scope>test</scope>
 			</dependency>
+
+
+			<!-- 3rd party dependencies. -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.7</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<!-- Test dependencies. -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.11</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>1.10.19</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-classic</artifactId>
+				<version>${version.ch.qos.logback}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>${version.ch.qos.logback}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.spec.javax.transaction</groupId>
+				<artifactId>jboss-transaction-api_1.1_spec</artifactId>
+				<version>1.0.1.Final-redhat-3</version>
+				<scope>test</scope>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 	<build>
@@ -79,18 +125,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<distributionManagement>
-		<repository>
-			<id>nexus-docker</id>
-			<name>Internal Releases</name>
-			<url>http://docker:48081/nexus/content/repositories/distribution-release-maven-repository/</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus-docker</id>
-			<name>Internal Releases</name>
-			<url>http://docker:48081/nexus/content/repositories/distribution-snapshot-maven-repository/</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 </project>

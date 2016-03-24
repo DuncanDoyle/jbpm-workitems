@@ -6,10 +6,9 @@
 		<artifactId>jbpm-workitems-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../</relativePath>
-
 	</parent>
 	<artifactId>infinispan-workitemhandler</artifactId>
-
+	
 	<dependencies>
 		<!-- KIE dependencies. -->
 		<dependency>
@@ -23,42 +22,18 @@
 			<scope>provided</scope>
 		</dependency>
 		
-		
 		<!-- Infinispan dependencies. -->
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
-			<version>${version.org.infinispan}</version>
-			<scope>compile</scope>
-			<exclusions>
-				<!-- 
-				<exclusion>
-					<groupId>org.jboss.marshalling</groupId>
-          			<artifactId>jboss-marshalling</artifactId>
-				</exclusion>
-				<exclusion>
-          			<groupId>org.jboss.marshalling</groupId>
-          			<artifactId>jboss-marshalling-river</artifactId>
-        		</exclusion>
-        		 -->
-			</exclusions>
+			<scope>provided</scope>
 		</dependency>
-		
-		<!-- Import the Infinispan client hotrod -->
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-client-hotrod</artifactId>
-			<version>${version.org.infinispan}</version>
-			<scope>compile</scope>
-			<exclusions>
-				<!-- 
-				<exclusion>
-          			<groupId>org.jboss.marshalling</groupId>
-          			<artifactId>jboss-marshalling-river</artifactId>
-        		</exclusion>
-        		 -->
-			</exclusions>
+			<scope>provided</scope>
 		</dependency>
+		
 		<!-- Test dependencies. -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -73,36 +48,17 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.1.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<version>1.1.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.spec.javax.transaction</groupId>
 			<artifactId>jboss-transaction-api_1.1_spec</artifactId>
-			<version>1.0.1.Final-redhat-3</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-
 </project>
